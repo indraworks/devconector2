@@ -1,0 +1,2 @@
+utk nodemon : npm run server
+utk node biasa : npm run start

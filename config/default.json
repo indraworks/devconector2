@@ -1,0 +1,5 @@
+{
+  "mongoURI":"mongodb+srv://indra:sri_2005@devconectorv2.ffk5y.mongodb.net/mern?retryWrites=true&w=majority",
+  "jwtSecret":"secret-word"
+  
+}
