@@ -1,0 +1,6 @@
+{
+  "mongoURI":"mongodb+srv://indra:sri_2005@devconectorv2.ffk5y.mongodb.net/mern?retryWrites=true&w=majority",
+  "jwtSecret":"secret-word",
+  "githubClientId":"8834f85585f209880f43",
+  "githubSecret":"ea50301342eacbec8e03f2f89b823909d2f9177b"
+}
