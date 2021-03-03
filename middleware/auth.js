@@ -7,13 +7,14 @@ module.exports = function (req, res, next) {
 
   //check if not token
   if (!token) {
-    res.status(401).json({ msg: 'No token authorization denied' });
+    return res.status(401).json({ msg: 'No token authorization denied' });
   }
 
   //verify if token
   try {
     const decoded = jwt.verify(token, config.get('jwtSecret'));
-    req.user = decoded.user; // decoded.user mksudnya ambil value dari key user object user:{id:user.id}
+    req.user = decoded.user; // decoded.user mksudnya ambil value dari
+    //key user object user:{id:user.id}
 
     console.log('req.user =', req.user); //hasil :req.user = { id: '5fec3264a1924573ce50e580' }
     next();

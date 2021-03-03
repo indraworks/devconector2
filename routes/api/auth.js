@@ -68,9 +68,12 @@ router.post(
       }
 
       //return json web token
+      //jadi data yg dibuka token didecode di midle ware ,
+      //nanti adalah id,name dari user
       const payload = {
         user: {
-          id: user.id, //krn pakai mongoose bisa gkperlu _id
+          id: user.id,
+          name: user.name, //krn pakai mongoose bisa gkperlu _id
         },
       };
       //res.send('Users registered');
@@ -92,7 +95,7 @@ router.post(
     } catch (err) {
       console.log(err.message);
       //server Error
-      res.status(500).send('server Error');
+      res.status(500).send('server Error "users');
     }
   }
 );
@@ -114,7 +117,7 @@ aslinya data payload  isinya :
 user:{id: '5fec3264a1924573ce50e580'}
 kmudian mau ambil valuenya maka yg kadi dot adalah user
 maka cara panggil :req.user ===>hasil: {id: '5fec3264a1924573ce50e580'}
-nah jika ingin ambil value dari key id maka fotnya adalah id
+nah jika ingin ambil value dari key id maka dotnya adalah id
 req.user.id  shingga di dapat =valuenya saja '5fec3264a1924573ce50e580
 kalua blum paham coba pljari object javascript
 dimana sleslau  { key: value } <--ini mrupakan obejct literal

@@ -70,11 +70,12 @@ router.post(
       //return json web token
       const payload = {
         user: {
-          id: user.id, //krn pakai mongoose bisa gkperlu _id
+          id: user.id,
+          name: user.name, //krn pakai mongoose bisa gkperlu _id
         },
       };
       //res.send('Users registered');
-
+     
       //note:asyncronus lhat note dibwah
       jwt.sign(
         payload,
