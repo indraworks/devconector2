@@ -1,2 +1,21 @@
 utk nodemon : npm run server
 utk node biasa : npm run start
+
+
+jadi utk supaya jalan keduanya install cuncurrently di root directory
+npm i axios react-router-dom redux react-redux  redux-thunk redux-devtools-extension moment react-moment
+
+dipackage.json root
+setelah itu di bagian package.json dibawah start { }buat :
+"dev" :"concurrently "\"npm run client\" \"npm run server\""
+
+dan jangan lupa 
+dipackage json client/frontend :
+paling bawah sndri
+
+"proxy" : "http://localhost:5300"
+
+1.step 1 buat navbar dan landing ,import cssnya paste di App.css
+buat dir components/layout/---> copypaster theme html yaitu landing dan navbar 
+pada component Navbar dan Landing.js dan replace class jadi className
+krn seusia pakem react => className (camel case)

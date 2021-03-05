@@ -1,2 +1,7 @@
 mmbuat routes yg terdiri dari 
 users,profile,posts
+di root install npm i concurrently
+
+npm i axios react-router-dom redux react-redux  redux-thunk redux-devtools-extension moment react-moment
+
+

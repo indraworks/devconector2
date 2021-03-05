@@ -150,7 +150,6 @@ router.put('/like/:id', auth, async (req, res) => {
     });
   }
 });
-module.exports = router;
 
 //ini post unlike
 //@route   api/posts/unlike/:id
@@ -162,7 +161,8 @@ router.put('/unlike/:id', auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (
-      post.likes.map((like) => like.user.toString === req.user.id).length === 0
+      post.likes.map((like) => like.user.toString() === req.user.id).length ===
+      0
     ) {
       return res.status(400).json({
         msg: 'no post that avalailble to unlike',
@@ -170,7 +170,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
     }
     //cari req.user.id index dalam array likes masuk variable
     const findIndex = post.likes
-      .map((like) => like.user.toString)
+      .map((like) => like.user.toString())
       .indexOf(req.user.id);
     //dari variable ini kita delete
     post.likes.splice(findIndex, 1);
@@ -187,13 +187,13 @@ router.put('/unlike/:id', auth, async (req, res) => {
   }
 });
 
-///////COMENT //////
-//@route   POST api/posts/:id/comments
-//@desc    Test route
-//@access  private buth auth middleware
+// ///////COMENT //////
+// //@route   POST api/posts/comments/:id
+// //@desc    Test route
+// //@access  private buth auth middleware
 
 router.post(
-  '/',
+  '/comment/:id',
   [auth, check('text', 'Text is required').not().isEmpty()],
   async (req, res) => {
     const errors = validationResult(req);
@@ -231,6 +231,77 @@ router.post(
   }
 );
 
+//
+// //@route   DELETE api/posts/comment/:post_id/:comment_id
+// //                tertulis: api/posts/comment/:id/:comment_id
+// //@desc    Test route
+// //@access  private buth auth middleware
+
+// Brad ////
+
+// @route   DELETE api/posts/comment/:id/:comment_id
+// @desc    Remove comment from post
+// @access  Private
+// router.delete('/comment/:id/:comment_id', auth, (req, res) => {
+//   Post.findById(req.params.id)
+//     .then((post) => {
+//       // Check to see if comment exists
+//       if (
+//         post.comments.filter(
+//           (comment) => comment._id.toString() === req.params.comment_id
+//         ).length === 0
+//       ) {
+//         return res
+//           .status(404)
+//           .json({ commentnotexists: 'Comment does not exist' });
+//       }
+
+//       // Get remove index
+//       const removeIndex = post.comments
+//         .map((item) => item._id.toString())
+//         .indexOf(req.params.comment_id);
+
+//       // Splice comment out of array
+//       post.comments.splice(removeIndex, 1);
+
+//       post.save().then((post) => res.json(post));
+//     })
+//     .catch((err) => res.status(404).json({ postnotfound: 'No post found' }));
+// });
+
+router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (
+      post.comments.filter(
+        //karena id ini  integer kalau yg masuk form req.params.coment_id atau req.params.id itu string!
+        (item) => item._id.toString() === req.params.comment_id //hrus to string kalau gak gak bisa!
+      ).length === 0
+    ) {
+      return res.status(404).json({
+        msg: 'the comment you search not Found!',
+      });
+    }
+    //excusi delete
+    //ubah dulu smua id ke dalam string id dari comments ,kmudian cari indx dari
+    //index dari comment_id yg tadi dimasukan lewat req.params.comment_id
+    //sbb jika ada maka id dari comment_id pasti ada di fields array comments {}
+    //baru di dielete coment_id yg sudah ktmu idx ya tsb.
+    const deleteIdx = post.comments
+      .map((comment) => comment._id.toString())
+      .indexOf(req.params.comment_id);
+    post.comments.splice(deleteIdx, 1); //delete element array di comments{} brdasarkan index
+    await post.save();
+    res.json(post);
+  } catch (err) {
+    return res.status(500).json({
+      msg: 'server error',
+    });
+  }
+});
+
+module.exports = router;
+
 /*
 penjelasan pada put likes :
 di model utk post.lieks.user ini isinya adalah objectId yg direferensikan 
@@ -267,5 +338,16 @@ coment kita ccpy dari post
 penjelasan coment ini sama dgn post hanya kalau post simpnanya didatabase
 kalau coment bentuknya object disimpan dalam aarray object
 
+
+*/
+
+/*
+s always, the choice between map() and forEach() 
+will depend on your use case. If you plan to change, 
+alternate, or use the data, you should pick map(), 
+because it returns a new array with the transformed data.
+
+But, if you won't need the returned array, don't use map() 
+- instead use forEach() or even a for loop.
 
 */

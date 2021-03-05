@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-
-const PostSchema = new mongoose.Schema({
+const Schema = mongoose.Schema;
+const PostSchema = new Schema({
   user: {
     //kita relasi dgn user di table User
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'users',
   },
   text: {
@@ -21,7 +21,7 @@ const PostSchema = new mongoose.Schema({
   likes: [
     {
       user: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'users',
       },
     },
@@ -30,7 +30,7 @@ const PostSchema = new mongoose.Schema({
   //ditamabah date kapan coment
   comments: [
     {
-      user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+      user: { type: Schema.Types.ObjectId, ref: 'users' },
       text: { type: String, required: true },
       name: { type: String },
       avatar: { type: String },
