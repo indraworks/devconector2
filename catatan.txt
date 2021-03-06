@@ -19,3 +19,15 @@ paling bawah sndri
 buat dir components/layout/---> copypaster theme html yaitu landing dan navbar 
 pada component Navbar dan Landing.js dan replace class jadi className
 krn seusia pakem react => className (camel case)
+
+//utk react reduxt 
+reducers alert yg masuk register adalah action 
+butuh conect utk import
+utk state dari reducers tidak ada nanti di bagian alert component
+nah import connect , masukan props nya di copmnent register ini 
+panggil import
+
+
+
+
+

@@ -1,6 +1,9 @@
 import React, { Fragment, useState } from 'react';
+import { connect } from 'react-redux';
+import { setAlert } from '../../actions/alert';
+import PropTypes from 'prop-types';
 
-const Register = () => {
+const Register = (props) => {
   const [formData, setFormData] = useState({
     //state aawal nilai di declare dulu
     name: '',
@@ -18,14 +21,18 @@ const Register = () => {
   };
   //menirma (e) event action dari ktika tombol button klick
 
-  const formSubmit =(e)=> {
-      e.preventDefault();
-      if(password !== password2) {
-        console.log('password not match')
-      } else {
-        console.log(formData)
-      }
+  const formSubmit = (e) => {
+    e.preventDefault();
+    if (password !== password2) {
+      //disini kita kluarkan alert krn password gak match
+      // console.log('password not match')
+      //di action isi passing parameternya alret adalah:msg, alertType
+      props.setAlert('Password donot match', 'danger'); //danger -->utk clasnmae diset di css
+      //utk buat supaya muncul kita buat alert componentnya ntar diimpor disini
+    } else {
+      console.log(formData);
     }
+  };
   const { name, email, password, password2 } = formData;
 
   return (
@@ -34,7 +41,7 @@ const Register = () => {
       <p className='lead'>
         <i className='fas fa-user'></i> Create Your Account
       </p>
-      <form className='form' onSubmit={e=>formSubmit(e)}>
+      <form className='form' onSubmit={(e) => formSubmit(e)}>
         <div className='form-group'>
           <input
             type='text'
@@ -45,7 +52,7 @@ const Register = () => {
             required
           />
         </div>
-        <div className='form-group'>_A
+        <div className='form-group'>
           <input
             type='email'
             placeholder='Email Address'
@@ -79,7 +86,7 @@ const Register = () => {
             minLength='6'
           />
         </div>
-        
+
         <input type='submit' className='btn btn-primary' value='Register' />
       </form>
       <p className='my-1'>
@@ -88,8 +95,14 @@ const Register = () => {
     </Fragment>
   );
 };
+Register.propTypes = {
+  //nama prop Action yg masuk kiri : kakan  jnis propTypes nya
+  setAlert: PropTypes.func.isRequired,
+};
 
-export default Register;
+//kiri,kanan
+//(statte,action)
+export default connect(null, { setAlert })(Register);
 
 /*//////////////KETERANGAN TENTANG STATE //////////////
 kalau diclass state itu didelcare di dalam constructor
@@ -116,7 +129,6 @@ nah kalau mrubah state tinggl this.setState({email:nilaiBaru})
 
 */
 
-
 /* //////TENTANG AXIOS KITA REGISTER ////////////
  nah disini dibagian jika pasword 1 === password 2 maka kita akan 
  lgin nah kita tampung itu isi value form dlm object 
@@ -124,6 +136,39 @@ nah kalau mrubah state tinggl this.setState({email:nilaiBaru})
  kita pakai axios ke route /api/users
  utk register kita gak pakai sdiakan token 
  
+
+
+
+*/
+
+/* TENTANG PROPS  jadi property adalah supaya si action bisa masuk 
+ inject nah propertynya supaya masuk dan dkinali makanya di taruh di passing parameter
+ const register=(props)=> {
+
+  ....props.setAlert()
+ }
+//KEDEPANNYA BISA LANGSUNG DI DESTRUCTION 
+JADI SPERTI INI:
+
+const regster=({setAlert}) {
+
+   penulisan udah gak pake props :
+     setAlert()
+s
+}
+
+//CATATAN TENANG PROPTYPES nah jadi props yg masuk atau injet 
+jenis datanya apa maka perlu didecrale
+snipet impt import proptypes
+utk yg ibawah bisa pakai ptfr jika propTYpe nya func ,r adalah required
+                         pts jika propType string bisa liat di library vs-exted snipetnya
+
+
+*/
+
+/* COMPONENET KALAU MAU CONECT KE ACTION ATAU STATE  DIREDUC HARUS PAKAI {CONNECT}
+  --iport connect
+  --buat pernyataam sambung di paling bawah stlah exprt efault connect()(nama_module) 
 
 
 
