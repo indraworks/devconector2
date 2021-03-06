@@ -5,3 +5,8 @@ di root install npm i concurrently
 npm i axios react-router-dom redux react-redux  redux-thunk redux-devtools-extension moment react-moment
 
 
+///pembuatan react redux
+1.buat dulu store boiler plate,wraping di app js dgn provider
+di /reducers buat index.js yg isinya smua combiner reducers
+kemudian kita buat file jenis reducers mis skrn kita tangani masalah alert
+kita buat reducers utk ubah state alert di alert.js

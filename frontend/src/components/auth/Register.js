@@ -17,7 +17,7 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   //menirma (e) event action dari ktika tombol button klick
-  
+
   const formSubmit =(e)=> {
       e.preventDefault();
       if(password !== password2) {
@@ -45,7 +45,7 @@ const Register = () => {
             required
           />
         </div>
-        <div className='form-group'>
+        <div className='form-group'>_A
           <input
             type='email'
             placeholder='Email Address'
@@ -91,7 +91,7 @@ const Register = () => {
 
 export default Register;
 
-/*
+/*//////////////KETERANGAN TENTANG STATE //////////////
 kalau diclass state itu didelcare di dalam constructor
 sbb
 constructor {
@@ -109,8 +109,21 @@ constructor {
   }
 
 }
-//nah kalau mrubah state tinggl this.setState({email:nilaiBaru})
+//
+
+nah kalau mrubah state tinggl this.setState({email:nilaiBaru})
 //utk form action kita ganti dgn form submit func 
+
+*/
+
+
+/* //////TENTANG AXIOS KITA REGISTER ////////////
+ nah disini dibagian jika pasword 1 === password 2 maka kita akan 
+ lgin nah kita tampung itu isi value form dlm object 
+ valueForm = { name:name,email:email,password:password} 
+ kita pakai axios ke route /api/users
+ utk register kita gak pakai sdiakan token 
+ 
 
 
 
