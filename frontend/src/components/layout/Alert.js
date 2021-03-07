@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 //     </div>
 //   )
 // }
-
+//aslinya ({props}) property inject dari reducers utk masukin state alerts (loakal)
 const Alert = ({ alerts }) => {
   return (
     alerts !== null &&
@@ -30,6 +30,7 @@ const mapStateToProps = (state) => ({
   alerts: state.alert, // sebalah kanan:state.alert adalah state dgn anma state yg ada direducers
   //yg sebelah kirir adalah nama varibale tuk tampung state tadi  di
   //component ini skrg
+
 });
 export default connect(mapStateToProps)(Alert);
 

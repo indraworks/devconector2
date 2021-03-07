@@ -1,8 +1,12 @@
 import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { setAlert } from '../../actions/alert';
-import PropTypes from 'prop-types';
+//import auth action
+import { registerUser } from '../../actions/auth';
 
+import PropTypes from 'prop-types';
+//catatan bisa kita pakau langsung: =({setAlert,regusterUser}) utk mwwakili props
+//gak perlu nulis props.setAlert etc tpi gak papa biar bljar biasain dulu
 const Register = (props) => {
   const [formData, setFormData] = useState({
     //state aawal nilai di declare dulu
@@ -30,7 +34,10 @@ const Register = (props) => {
       props.setAlert('Password donot match', 'danger'); //danger -->utk clasnmae diset di css
       //utk buat supaya muncul kita buat alert componentnya ntar diimpor disini
     } else {
-      console.log(formData);
+      // console.log(formData); jika success
+      //kita passing disini email,nama,password dari formData
+      //brupa object destructing
+      props.registerUser({ name, email, password });
     }
   };
   const { name, email, password, password2 } = formData;
@@ -49,7 +56,7 @@ const Register = (props) => {
             name='name'
             value={name}
             onChange={(e) => onChange(e)}
-            required
+            // required
           />
         </div>
         <div className='form-group'>
@@ -59,7 +66,7 @@ const Register = (props) => {
             name='email'
             value={email}
             onChange={(e) => onChange(e)}
-            required
+            // required
           />
           <small className='form-text'>
             This site uses Gravatar so if you want a profile image, use a
@@ -73,7 +80,7 @@ const Register = (props) => {
             name='password'
             value={password}
             onChange={(e) => onChange(e)}
-            required
+            // required
           />
         </div>
         <div className='form-group'>
@@ -83,7 +90,7 @@ const Register = (props) => {
             name='password2'
             onChange={(e) => onChange(e)}
             value={password2}
-            minLength='6'
+            // minLength='6'
           />
         </div>
 
@@ -98,11 +105,12 @@ const Register = (props) => {
 Register.propTypes = {
   //nama prop Action yg masuk kiri : kakan  jnis propTypes nya
   setAlert: PropTypes.func.isRequired,
+  registerUser: PropTypes.func.isRequired,
 };
 
 //kiri,kanan
 //(statte,action)
-export default connect(null, { setAlert })(Register);
+export default connect(null, { setAlert, registerUser })(Register);
 
 /*//////////////KETERANGAN TENTANG STATE //////////////
 kalau diclass state itu didelcare di dalam constructor
