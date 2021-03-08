@@ -9,7 +9,7 @@ const { check, validationResult } = require('express-validator');
 
 //@route   GET api/auth
 //@desc    Test route
-//@access  Public
+//@access  Private
 
 router.get('/', auth, async (req, res) => {
   try {
@@ -77,7 +77,8 @@ router.post(
         },
       };
       //res.send('Users registered');
-
+      //jadi setlah login dimasukin payload data utk si user 
+      //maka di compres dibuat token baru dikirm balik ke local storagenya user
       //note:asyncronus lhat note dibwah
       jwt.sign(
         payload,

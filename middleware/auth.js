@@ -41,6 +41,17 @@ jika ada error waktu token dicheck maka respon msg error token
 nah req.user ini info tadi adalah payloada trgantung diisi apa kalau disini 
 pada kusrsus ii diisi  user.id 
 
+////////////////PENJELASAN HUBUNGANNNYA SAMA REDUX LOADER nah ini dia
+jadi USER_LOADER adalah periksa utk periksa token distorage masih valid apa tidak 
+jika valid maka isAuthenticated dipasang dng true 
+jika tikda maka kirim error nah disini maka akan 
+didevode token dgn json verify dilihat isi idnya user_id 
+nah dimasukan ke req.user nah req user masuk ke dalam 
+auth ( di router)  yg skrgn ini kan auth di midleware  utk decode saja 
+nah di auth route isinya adalah utk periksa user.req idnya apa ada di dalam database jika ada
+maka dia valid
+
+
 
 
 */
