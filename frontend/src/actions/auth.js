@@ -4,25 +4,28 @@ import axios from 'axios';
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
-  USER_LOADER,
+  USER_LOADED,
   AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
 } from './type';
 //import setAlert action yg mrupakan funct utk set message alert pada component di frontEnd
 import { setAlert } from './alert';
-import setAuthToken from './utils/auth';
-//Load User
+import setAuthToken from '../utils/utils';
+
+//Load User ini akan di ativkan di App.js
+//dgn pakai cara useEffect yg equal dgn class comp componentDidMount(){}
+//manggil sklai  diatifkan pas frontend refrest /pada saat stlah login /register
 export const loadUser = () => async (dispatch) => {
   if (localStorage.token) {
-    setAuthToken(localStorage.token); // wraping headernya dgn token di localstorage
+    setAuthToken(localStorage.token);
   }
+
   try {
-    //dispacth token ke auth route
-    //kirim aut
-    const res = await axios.get('/api/auth'); //note axios tadi uda keisi
-    // header & token dari lokal storage yg di  bungkus header
+    const res = await axios.get('/api/auth');
+
     dispatch({
-      //dispatch ke reducer
-      type: USER_LOADER,
+      type: USER_LOADED,
       payload: res.data,
     });
   } catch (err) {
@@ -31,6 +34,8 @@ export const loadUser = () => async (dispatch) => {
     });
   }
 };
+
+//User_Loaded
 
 //Register user
 //yg di krimm btuk object trdiir dari {name,emal,password}
@@ -53,6 +58,7 @@ export const registerUser = ({ name, email, password }) => async (dispatch) => {
       payload: response.data, //jika success maka yg di kiim ke state adalah response data
       //hasil data adalah update dari server
     });
+    dispatch(loadUser()); //stlah success langsung check auth token
   } catch (err) {
     //jika fail dispatch pilihan type ke reducer :EGISTER_FAIL
     dispatch({
@@ -62,6 +68,42 @@ export const registerUser = ({ name, email, password }) => async (dispatch) => {
     //function action ini dari actions/alert supaya update component utk alertnya
     //beritahu user register gagal dgn tampilkan alert msg dari error
     //kita ambil response dari server tanmpung di variable
+    const errors = err.response.data.errors;
+    //jika errr ada datanya
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+  }
+};
+
+/// tinggal kita copy dari register,login note:sama dgn register tinggal ganti gak pake name ////
+
+export const loginUser = ({ email, password }) => async (dispatch) => {
+  //buat config utk aiosnya
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  //buat body/data utk axiosnya,stringify convert dari object ke  string kalau dari client ke server
+  const body = JSON.stringify({ email, password });
+
+  //sending data lwat axios k server end poit /api/users
+  try {
+    const response = await axios.post('/api/auth', body, config);
+    //jika sucess dispatch pilihan type ke reducer :EGISTER_SUCCESS
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: response.data, //jika success maka yg di kiim ke state adalah response data
+      //hasil data adalah update dari server
+    });
+    dispatch(loadUser()); //stlah success langsung check auth token
+  } catch (err) {
+    //jika fail dispatch pilihan type ke reducer :EGISTER_FAIL
+    dispatch({
+      type: LOGIN_FAIL,
+    });
+
     const errors = err.response.data.errors;
     //jika errr ada datanya
     if (errors) {

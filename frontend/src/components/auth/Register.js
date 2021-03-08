@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { setAlert } from '../../actions/alert';
 //import auth action
 import { registerUser } from '../../actions/auth';
+import { Link } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 //catatan bisa kita pakau langsung: =({setAlert,regusterUser}) utk mwwakili props
@@ -97,7 +98,7 @@ const Register = (props) => {
         <input type='submit' className='btn btn-primary' value='Register' />
       </form>
       <p className='my-1'>
-        Already have an account? <a href='login.html'>Sign In</a>
+        Already have an account? <Link to='/login'>Sign In</Link>
       </p>
     </Fragment>
   );
@@ -179,5 +180,11 @@ utk yg ibawah bisa pakai ptfr jika propTYpe nya func ,r adalah required
   --buat pernyataam sambung di paling bawah stlah exprt efault connect()(nama_module) 
 
 
+*/
+
+/*
+catatan:kita butuh state isAuthenticate utk meredirect menuju halaman ygn lain 
+jika isAuthenticate bernilai benar , isAuthenticate = true
+kita gunakan Redirect brasal dari React-Router-DOM
 
 */

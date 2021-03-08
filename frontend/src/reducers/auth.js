@@ -1,4 +1,11 @@
-import { REGISTER_SUCCESS, REGISTER_FAIL } from '../actions/type';
+import {
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  USER_LOADED,
+  AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+} from '../actions/type';
 
 //initial state
 //smua token alawanya ada di local storage disimpan kita ambil nanti
@@ -12,10 +19,23 @@ const initialState = {
   user: null, // diset null krn blum ada isi apa2
   // pass mau login maka ada isinya yaitu nama ,email ,password nilai state dari form yg dimasukan
   //pasing e sini lewat axios ke server
+  loading: true,
 };
 export default function authReducer(state = initialState, action) {
   switch (action.type) {
-    case REGISTER_SUCCESS:
+    case USER_LOADED:
+      //ngeset isauthenticated = true dan set yg lainnya dari localstorage yg
+      //didapat dari server username,email,
+      return {
+        ...state,
+        ...action.payload,
+        isAuthenticated: true,
+        loading: false,
+        user: action.payload,
+      };
+
+    case REGISTER_SUCCESS: //login success & login_fail sama utk state behavior atau nilainya
+    case LOGIN_SUCCESS:
       //ingat harus dikembalikan lagi stelah ubah isi object
       //returnnya dlm btuk objec {}
       //kita tulis utk local storage set item dluar return karna
@@ -28,6 +48,8 @@ export default function authReducer(state = initialState, action) {
         loading: false, //diprkriakan sdang loading di api
       };
     case REGISTER_FAIL:
+    case LOGIN_FAIL:
+    case AUTH_ERROR:
       //kita brsihkan token di storage
       localStorage.removeItem('token');
       return {
@@ -52,3 +74,9 @@ export default function authReducer(state = initialState, action) {
 //kita buat dari end ke hulu biar bisa ngetrace
 
 //JANGAN LUPA CHECK root reducernya ta,bahkan reducer yg sudah kita buats di file index.js
+
+/*
+ nah nnati di pasang itu 
+
+
+*/
