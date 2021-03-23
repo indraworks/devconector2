@@ -1,82 +1,68 @@
+//auth reducer berisi autentikasi untuk registrasi dan login
 import {
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
+  FAIL_REGISTER,
+  SUCCESS_REGISTER,
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
-  LOGIN_FAIL,
+  LOGIN_ERROR,
+  LOGOUT,
+  CLEAR_PROFILE,
 } from '../actions/type';
 
-//initial state
-//smua token alawanya ada di local storage disimpan kita ambil nanti
-//state authetication adalah sbb:
-//
-
 const initialState = {
-  token: localStorage.getItem('token'), // kita check apa di dlm sotorage token masih valid
-  isAuthenticated: null, //defaultnya ,tapi jika access brhasil maka
-  //authenticate adalah true kalau fail nilainya adalah false
-  user: null, // diset null krn blum ada isi apa2
-  // pass mau login maka ada isinya yaitu nama ,email ,password nilai state dari form yg dimasukan
-  //pasing e sini lewat axios ke server
+  token: localStorage.getItem('token'),
+  isAuthenticated: null,
   loading: true,
+  user: null,
 };
-export default function authReducer(state = initialState, action) {
+
+export default function auth(state = initialState, action) {
   switch (action.type) {
     case USER_LOADED:
-      //ngeset isauthenticated = true dan set yg lainnya dari localstorage yg
-      //didapat dari server username,email,
       return {
         ...state,
-        ...action.payload,
         isAuthenticated: true,
         loading: false,
         user: action.payload,
       };
-
-    case REGISTER_SUCCESS: //login success & login_fail sama utk state behavior atau nilainya
+    case SUCCESS_REGISTER:
     case LOGIN_SUCCESS:
-      //ingat harus dikembalikan lagi stelah ubah isi object
-      //returnnya dlm btuk objec {}
-      //kita tulis utk local storage set item dluar return karna
-      //kita gak nulis distate tapi nulis token yg baru didapat di local storage
-      //stlahnya baru dispacth update state
       localStorage.setItem('token', action.payload.token);
       return {
-        ...state, //update state brarti token brubah ilainya krn diisi dari server putitem dan kmdian get lagi dri storage
+        ...state, //dispreate state
+        ...action.payload, //dispreated payload
         isAuthenticated: true,
-        loading: false, //diprkriakan sdang loading di api
+        loading: false,
       };
-    case REGISTER_FAIL:
-    case LOGIN_FAIL:
+    case FAIL_REGISTER:
     case AUTH_ERROR:
-      //kita brsihkan token di storage
+    case LOGIN_ERROR:
+    case CLEAR_PROFILE:
+    case LOGOUT: //logout sama token nul isauth false,
       localStorage.removeItem('token');
       return {
-        ...state, //update state brarti token brubah ilainya (kosong)krn di get lagi dri storage
-        isAuthenticated: false, //jdi galse krn gagal regsiter
-        loading: false, //diprkriakan sdang loading di api
+        ...state,
+        token: null,
+        isAuthenticated: false,
+        loading: false,
       };
-
     default:
       return state;
   }
 }
-
-//catatan dispreat adalah utk kluarkan array mnjadi indivdu2 yg berdiri sndiri
-//jadi berdiri terpisah tapi berkumpul dalam object bukan dalam bentuk array
-// yg berindex mis :state = [{address:'jl selat sunda1,email:mokong@gmail.com},
-//address:'jl selat sunda1,email:mokong@gmail.com},]
-//jika didespreate  hi = {...state,address:'lucky'}
-//maka hasilnya adalah addess trupdate
-
-//catatan:stlah susun reducer kita buat actionya aslnya mesti action dulu tapi
-//kita buat dari end ke hulu biar bisa ngetrace
-
-//JANGAN LUPA CHECK root reducernya ta,bahkan reducer yg sudah kita buats di file index.js
-
 /*
- nah nnati di pasang itu 
+jadi gini tentang loading atau loader ini setiap user refresh mmperbaharui 
+halamannya maka client menuju ke server get /api/users/ utk check apakah token user
+yg login asih valid 
+atau pada saat user mau login pasti dikirim token ke server 
+jadi kondisi stlah login pun demikian pada saat user pindah halaman etc
+maka kondisi trsbut refresh shingga usAuthenticated = null ,
+utk itu secara terus menerus client harus melakukan check apakah token masih valid?
+di check :get /api/users/
+
+jika sudah tidak valid maka didelete itu token di localstorage dan diredirect nanati 
+utk logout sehinga user harus login lagi pada deaultnya state loading = true
 
 
 */

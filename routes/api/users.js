@@ -56,7 +56,7 @@ router.post(
       });
 
       user = new User({
-        //note :ini create object blum disave,tnggu di encrypt dulu pwnya
+        //note :ini create object blum disave,tnggu di encrypt dulu smwnya
         name,
         email,
         avatar,

@@ -1,21 +1,19 @@
-//kita buatuh pakai axios
-
 import axios from 'axios';
 import {
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
+  SUCCESS_REGISTER,
+  FAIL_REGISTER,
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
-  LOGIN_FAIL,
+  LOGIN_ERROR,
+  LOGOUT,
+  CLEAR_PROFILE,
 } from './type';
-//import setAlert action yg mrupakan funct utk set message alert pada component di frontEnd
-import { setAlert } from './alert';
-import setAuthToken from '../utils/utils';
+import { setAlert } from '../actions/alert';
+//inport utils
+import setAuthToken from '../utils/setAuthToken';
 
-//Load User ini akan di ativkan di App.js
-//dgn pakai cara useEffect yg equal dgn class comp componentDidMount(){}
-//manggil sklai  diatifkan pas frontend refrest /pada saat stlah login /register
+////Loader ////
 export const loadUser = () => async (dispatch) => {
   if (localStorage.token) {
     setAuthToken(localStorage.token);
@@ -34,101 +32,187 @@ export const loadUser = () => async (dispatch) => {
     });
   }
 };
-
-//User_Loaded
-
-//Register user
-//yg di krimm btuk object trdiir dari {name,emal,password}
-export const registerUser = ({ name, email, password }) => async (dispatch) => {
-  //buat config utk aiosnya
+////end loader ///////
+//"access-control-allow-origin": "*"
+/////Register /////
+export const register = ({ name, email, password }) => async (dispatch) => {
+  const newUser = {
+    name,
+    email,
+    password,
+  };
   const config = {
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'Application/json',
+      //gak perlu pake authorization
     },
   };
-  //buat body/data utk axiosnya
-  const body = JSON.stringify({ name, email, password });
+  const body = JSON.stringify(newUser);
 
-  //sending data lwat axios k server end poit /api/users
   try {
-    const response = await axios.post('/api/users', body, config);
-    //jika sucess dispatch pilihan type ke reducer :EGISTER_SUCCESS
+    const res = await axios.post('/api/users', body, config);
+
     dispatch({
-      type: REGISTER_SUCCESS,
-      payload: response.data, //jika success maka yg di kiim ke state adalah response data
-      //hasil data adalah update dari server
+      type: SUCCESS_REGISTER,
+      payload: res.data,
     });
-    dispatch(loadUser()); //stlah success langsung check auth token
+    dispatch(loadUser());
   } catch (err) {
-    //jika fail dispatch pilihan type ke reducer :EGISTER_FAIL
-    dispatch({
-      type: REGISTER_FAIL,
-    });
-    //yg dikirim gak ada payload kita dispatch setAlert sblumnya kita import dulu
-    //function action ini dari actions/alert supaya update component utk alertnya
-    //beritahu user register gagal dgn tampilkan alert msg dari error
-    //kita ambil response dari server tanmpung di variable
-    const errors = err.response.data.errors;
-    //jika errr ada datanya
+    //jika error maka inport setAlert kita dispatach sama sperti alert di landingpage
+    const errors = err.response.data.error;
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
+    dispatch({
+      type: FAIL_REGISTER,
+    });
   }
 };
 
-/// tinggal kita copy dari register,login note:sama dgn register tinggal ganti gak pake name ////
-
-export const loginUser = ({ email, password }) => async (dispatch) => {
-  //buat config utk aiosnya
+///Login ////
+export const login = ({ email, password }) => async (dispatch) => {
+  const user = {
+    //padda es6 jika variable dgn nilai dari passing parameter sama maka bisa
+    //ditulis sekali
+    // email:email,
+    // password:password,
+    email,
+    password,
+  };
   const config = {
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'Application/json',
+      //gak perlu pake authorization
     },
   };
-  //buat body/data utk axiosnya,stringify convert dari object ke  string kalau dari client ke server
-  const body = JSON.stringify({ email, password });
+  const body = JSON.stringify(user);
 
-  //sending data lwat axios k server end poit /api/users
   try {
-    const response = await axios.post('/api/auth', body, config);
-    //jika sucess dispatch pilihan type ke reducer :EGISTER_SUCCESS
+    const res = await axios.post('/api/auth', body, config);
+    console.log(res);
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: response.data, //jika success maka yg di kiim ke state adalah response data
-      //hasil data adalah update dari server
+      payload: res.data, //res.data isinya adalah token
     });
-    dispatch(loadUser()); //stlah success langsung check auth token
+    dispatch(loadUser());
   } catch (err) {
-    //jika fail dispatch pilihan type ke reducer :EGISTER_FAIL
-    dispatch({
-      type: LOGIN_FAIL,
-    });
+    //jika error maka inport setAlert kita dispatach sama sperti alert di landingpage
 
-    const errors = err.response.data.errors;
-    //jika errr ada datanya
+    const errors = err.response.data.error;
     if (errors) {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
+
+    dispatch({
+      type: LOGIN_ERROR,
+    });
   }
 };
 
-//stlah ini action kita gabung ke component register dgn import connect reac redux
-//import {registerUser} from '../../actions/auth
-//kmudian kita set connect paling bawah dan isi tambahkan action auth di connect(registeruser )(Register)
-//tambahkan  di const REgister =({register})
+//logout
 
+export const logout = () => (dispatch) => {
+  //1 dispatch mewakili 1 action type
+  dispatch({
+    type: CLEAR_PROFILE,
+  });
+  dispatch({
+    type: LOGOUT,
+  });
+};
+
+//////CATATAN ////////////
+/*USER_LOADER keterangan 
+kita login kita udah dapat token jika success
+register sucess maka harus ada loader kita get token apa token kita valid apa tidak 
+dan disimpan di localsotorage shabis register /login atau slama user signin 
+(jika ada batas waktu tokennya)
+
+langkah2 di action type buat type state jika sucess send USER_LOADED 
+                                        jika error send AUTH_ERROR
+kita buat function utils yg mana jika ada token langsun gkit agabubg tokennya
+di dalam header utk di send ke server ,.method :get  /api/users/auth
+supya ngcek token kit adan decode isi payload token berupa ( id,username,email)
+dan di save di local storage 
+kita taruh di utils/setAuthToken.js  --.function yg berisi passing token
+kmudian function tsb mnirma argument token jika ada token maka 
+di set gabungin token di header 
+jika gak ada token maka header didelete
+export ini function supaya diimport di loader Action,
+kmudian kit agunakan axios utk conect metod get hasil respoonse di tampung di variable res
+   try{
+     const res = await axios('/api/users/auth,config);
+     //jika berhasil kita send ke reducer payload nya yaitu res
+     //kita dispatch
+        dispatch({
+          type:USER_LOADED,
+          payload:res.data
+        })
+   } catch(err) {
+      dispatch({
+        type:AUTH_ERROR
+      })
+
+   }
+di reducer kita tinggal update statenya 
+  case USER_LOADED:
+    return {
+      ...state,
+      isAutenthicate:true,
+      loading:false,
+      user:action.payload
+    }
+
+pada App.js    
+kita masukan nnati utk check user_loaded ini di app
+pertama kita copy setAuthToken(localStorage.token) di taruh di app.js
+import util/setAuthToken.js dari /utils
+
+kmudian kita gunakan useEfect dan dispatch dari store utk send userLoad
+jadi stiap user yg active saat refresh selalu kirim utk get /api/server/auth 
+pastikan dia masih valid tokennya kalau tidak maka otomatis nnti log out
+
+
+*/
 /*
-Keterangan JSON.Stringify  ---->kasih data keserver maka data harus bentuknnya String
-A common use of JSON is to exchange data to/from a web server.
+Penjelasan isAuthenticated ,USER_LOADED,redirect
+setelah action.type  USER_LOADED diterima oleh reducer maka di aset isauthentaticated
+yg dulumya false menjadi true
 
-When sending data to a web server, the data has to be a string.
+ini maka akan akibatkan state isAuthenticated dari false jadi true 
+utk itu state ini yg kita pakai utk redirect dari register page ke login
+atau dari login menuju ke dahsbaord page!
 
-Convert a JavaScript object into a string with JSON.stringify().
 
-/// JSON.parse  --->terima data dari server maka data harus di cobnver jadi object
+*/
 
-When receiving data from a web server, the data is always a string.
-
-Parse the data with JSON.parse(), and the data becomes a JavaScript object.
+/* PENJELASAN LOGIN : adalah authentication & dapatin token dari server
+Penjelasan Login ingat ya login itu utk authentication 
+jadi kita masukan email password server cari email kita 
+jika ketmu maka ok di validasi password kita dgn bcrypt.compare(pwd dari req.body,dtabase) =ismatch
+jika true atau match maka kita masukan info utk authentasi pada token biar di crypt
+tadi pada masukan login kan cari email kita nah pada saat finOne ditaabse ketmu 
+maka info satu field didapat didatabase di simpan di variable user
+const user = User.findOne({email} ) //yg ada di user = {_id,name,email,passowrd}
+nah sesudahnya user ini kit amauskan ke variable sebut saja payload
+utk apa utk di encrypt /scramble bersama denga jwtSecret (isinya key yg ada di file env)
++ dgn waktu berlakunya token ini jadi 
+jadi ingat pertama 
+  jika valid password  dan kita uda dapat info dari field maka kita masukan 
+   data kedala variable payload ,nah terserah data apa saja yg dimasukan dari satu field tadi 
+   dari varaibel user 
+   disini(dlm contoh ini) kita masukan id sama name saja 
+       const payload = {
+         user:{id:user._id}
+       }
+   kmudian kita cryot dgn function buildin jwtsign
+   jwt.sign(payload,config.get('jwt.secret'),(err,toke)=> {
+     if(err) Throw(err)
+     res.json(token) //nah ini yg di kembalikan client pada saat login 
+   })
+ nah sekarang liat diredux pada saat success state apa yg dilakukan yaitu :
+      karena token di send ke kita dari serve
+    - save token di localstorage,
+     -redirect ke Dasboard 
 
 */

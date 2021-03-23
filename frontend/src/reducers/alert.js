@@ -1,49 +1,40 @@
 import { SET_ALERT, REMOVE_ALERT } from '../actions/type';
 
-const initialState = [];
+const initialState = []; //allert alarm dalam array
 
-export default function alertReducer(state = initialState, action) {
+export default function alertReducers(state = initialState, action) {
+  
+  
   switch (action.type) {
     case SET_ALERT:
-      return [...state, action.payload]; //ingat kalau dlm btnuk array maka return bntuk array
+      return [...state, action.payload];
+
     case REMOVE_ALERT:
-      //ini update state dan direturn lagi
+      //ingat isi state adalah object {id,msg,alertType}
+      //nah yg di looping adalah id yg tidak dipilih/di remove
+      //jadai difilter yg id sekrg tidak sama dgn yg skrg
       return state.filter((alert) => alert.id !== action.payload);
+
     default:
       return state;
   }
 }
 
 /*
-reducer mrupakan tmpat ubah state trima data dan action type data
-dari actions nah awal2 ada initial state state awalmmu al 
-disini dikasih kongo nilainya 
-contoh initial state sudah ada nilai mis
-const initialState = [
-  {
-    id:1,
-    msg:'Please log in'
-    alertype:'success'
-  },
-  {
-    id:2,
-    msg:'Please register'
-    alertype:'failed'
-  },
-]
-let payload = {id:3,msg:'helo',alerttype:'xxx'}
- const newState ={...initialState,payload}
-maka new ssate skargn isinya 3 state ..
-*/
 
-/*
-const mapStateToProps = (state) => ({
-  alerts: state.alert, // sebalah kanan:state.alert adalah state dgn anma state yg ada direducers
-  //yg sebelah kirir adalah nama varibale tuk tampung state tadi  di
-  //component ini skrg
-  alerts == >>> varibale state lokal yg dimasukin variabe dari state reducers
-  state.alert adalah  state nama dari reducers
+tahap reducer :
+mmbuat file index.js
+-isinya index.js mrupakan combiner smua file reducer dlm hal ini pertama kita mmbuat
+file alert.js utk mmeberi error 
+-kmduian memilay rtype dari action ,dgn swicth piliha utk type tadi
+-dgn retrun hasil kembalian ke store melalui provider.app.js supata terhubung dgn component
+ -stlahnya lakukan import action ,di component 
+ -propsnya di destruction
+ -buat typeProps ,utk props yg masuk di component
+ -buat mapsttetoporpya utk state yg masukan kedalam variable local state dari reducer
+  jika meman ada state
+ -buat conect di bagian bawah dgn component masukan action yg diimport dari action 
 
-});
+
 
 */

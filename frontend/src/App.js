@@ -6,23 +6,27 @@ import Register from './components/auth/Register';
 import Landing from './components/layout/Landing';
 import Navbar from './components/layout/Navbar';
 import Alert from './components/layout/Alert';
+import Dashboard from './components/dashboard/Dashboard';
+import PrivateRoute from './components/routing/PrivateRoute';
 
 //redux
 import { Provider } from 'react-redux';
 import store from './store';
+//import loaduser
 import { loadUser } from './actions/auth';
-import setAuthToken from './utils/utils';
+import setAuthToken from './utils/setAuthToken';
+
 import './App.css';
 
-const App = () => {
-  //wrapping dgn Router
-  useEffect(() => {
-    if (localStorage.token) {
-      setAuthToken(localStorage.token);
-    }
-    store.dispatch(loadUser());
-  }, []); //update hanya sekali saja
+if (localStorage.token) {
+  setAuthToken(localStorage.token);
+}
 
+const App = () => {
+  //kita pakai useEffect~componentDidMount active pas direfresh/activitas user
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
   return (
     <Provider store={store}>
       <Router>
@@ -32,8 +36,9 @@ const App = () => {
           <section className='container'>
             <Alert />
             <Switch>
-              <Route exact path='/login' component={Login} />
               <Route exact path='/register' component={Register} />
+              <Route exact path='/login' component={Login} />
+              <PrivateRoute exact path='/dashboard' component={Dashboard} />
             </Switch>
           </section>
         </Fragment>
@@ -45,7 +50,7 @@ const App = () => {
 export default App;
 
 /*
-jadi useLoaded kit apakai disini utk update token yg didapat di localsotrage di kiim
+jadi useLoaded kit apakai disini utk update token yg didapat di localsotrage di kirim
 ke server api/auth utk dapatkan valid tidaknya token tsb,
 krn dijalankan skali saja maka kita pakai useEffect yg mana ada[] sblum tanda return()
 jalankan action ini melallui useEffect()

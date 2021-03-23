@@ -1,17 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-// ara lama
-//const Alert=(props)=> {
-//   return (
-//     <div>
-
-//     </div>
-//   )
-// }
-//aslinya ({props}) property inject dari reducers utk masukin state alerts (loakal)
 const Alert = ({ alerts }) => {
+  //harus return ya karena dirender di app.js
+
   return (
     alerts !== null &&
     alerts.length > 0 &&
@@ -22,43 +15,70 @@ const Alert = ({ alerts }) => {
     ))
   );
 };
+//kalau pakae vraibel.map(x=>(<div>{x}</div>)) //ini udah return
+//kalau pakai kata return variable.map(x=>{return <div>{x} </div>})
+const mapStateToProps = (state) => ({
+  alerts: state.alertReducers, //dari reducer
+});
 Alert.propTypes = {
   alerts: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  alerts: state.alert, // sebalah kanan:state.alert adalah state dgn anma state yg ada direducers
-  //yg sebelah kirir adalah nama varibale tuk tampung state tadi  di
-  //component ini skrg
-
-});
 export default connect(mapStateToProps)(Alert);
 
 /*
-jadi sklai lagi kalau propsnya didestructing
-aslinya ini kan merupakan inject property dari action atau state dari reducer
-=(props)=> {} diganti
-jadi nama statenya langsung 
-=({setAlert}) = > {}
+JALANNYA SET ALERT Ya ,biar tidak bingung ,
+jadi gini action di reducer itu setAlert berisi type SET_ALERT,REMOVE_ALERT
+nah ktika action dia kirim type action  SET_ALERT dan Action.payload info yg akan di
+kirim 
+nah sama reducer diterima typeaction sehingga mengubah state update dari yg blum ada
+jadi ada SET_ALERT dan isinya payload adalah msg alarm,type alarmnya smua dlm type string
+nah action ini bamgkit jika ditriget dari component nah event yg triger dia adalah
+waktu submit ,nah supaya dia bisa conect di component dia (alert) ini kit aimport
+ -conect supata bisa imprt actionnya dan kita export utk supaya ditangkap reducer
+ dgn cara di connect di bagian export dibawah ,kmudian masukan connect(null,{setAlert})(Register)
+di Reister hanya lakukan action gak namgkap state 
+nah stalh action di kluarkan awaktu submit maka ini diterima reducer
+nah sireducer ubah state tsb ,ktika ubah state ada component yg akan berubah apa itu 
+alert component kita punya component alert yg memang kita buat berisi css html 
+dimana component ini menrima props state bukan kluarkan action ya nah 
+sama sperti di Register 
+const Alert=({Alerts})=> {}    //aslinya (props)
+//const{Alerts} = props
+didalamnya function Alert() {
+  //jika alert !== null && alerts > 0 && maka kit amaping
+  //karena alarm payloadnya isinya berupa array
+   alerts.map(alert=>(<div  key={alerts.id} className=`{alert alert-${alert.alertType}}`> ${alert.msg} </div>))
+}
+
+nah kmpmida dia exprot komponent ini 
+nah dimana kompoent ini ditaruh dia ditaruh di App.js
+posisi compoennt ditaruh diatas swithc 
+dan hanya muncul berdasarkan logicnya jika alerts.length >0 atau alerts !== null
+maka akan dibuat component element tag <div>      
+<div  key={alerts.id} className=`{alert alert-${alert.alertType}}`> ${alert.msg} </div>
+berikut utk pilihan type alarmnya di css jika danger dan warna background color
+
+.alert-danger {
+  background: var(--danger-color);
+  color: #fff;
+}
 
 
+.alert-success {
+  background: var(--success-color);
+  color: #fff;
+}
 
-*/
-
-/*
-jadi sikomponent Alert ini ambil statenya alert reducer utk ditampilkan 
-kan dari action isinya msg,sama type_mesage( utk className) trus di truskan ke komponent
-register pada saat kita mau register pas bisa muncul  karena password yg sama
-nah di component register kita harus import action setAlert,kmudian conect
-utk supaya bisa conect di redux store trhubung react-reduxnya
-nah actionya diconect paling bawah nama actionnya,
-nah stelah disetAlert kita akan mesti tahu pingin munculkan di bifroend end nah kita ambil statenya
-yg alnil statenya dgn buat component utk tampilkan nama komponennya adalah Alert
-nah dicomponent ini harus sama 
-  - import conect bait biasa hubungi redux store update state yg aman ada reducernya 
-  nah dkita conect dgn buat mapStaeToProps=state=>({
-    //variable-statekita :state dari reducer
-    alerts:state.alert <----nama state direducer!
-  })
+nah itu muncul alert tiap dia tekan mis jika validation error
+teru menerus nah supaya bisa hilangkan maka diperlukan state REMOVE_ALERT ( kit akasih anam ini)
+nah actipnnya type adalah REMOVE_ALERT
+isinya payload hanya payload = .id  (dari uuid)
+nah direudcer diterima dan state diterima yaut REMOVE _ALERT
+trus gimana processnya kita filter state dimana state.filter(alert.id!==action.payload)
+alert.id adalah id yg lama  ,action.payload mmbawa id yg baru 
+intinya tampilkan id yg tidak sama dgn alert.id sblumnya jika demkian 
+maka payloadnya kan hanya id saja tdak ada msg,atau type  maka tidak akan dtimaplikan apa2
+alias kosong di landing page
 
 */

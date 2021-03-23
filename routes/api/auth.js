@@ -18,7 +18,7 @@ router.get('/', auth, async (req, res) => {
     res.json(user); //tampilkan smua user field except passwordnya
     console.log(user);
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
     res.status(500).send('Server Error');
   }
 });
@@ -39,6 +39,7 @@ router.post(
   async (req, res) => {
     //console.log(req.body); //test dari frontend kirim req.body
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
       //jika ada error
       //bad request (400)
@@ -47,16 +48,17 @@ router.post(
         //dari nvalidation diatas!
       });
     }
-
     const { email, password } = req.body;
+
     try {
       let user = await User.findOne({ email });
-      console.log(user);
+      console.log(' hello this is user ', user);
       if (!user) {
         //jika email gak ada
         return res.status(400).json({
           error: [{ msg: 'Invalid Credential !' }],
         });
+        console.log('hello ada error ', user);
       }
 
       //compare password input vs pasword db
@@ -68,7 +70,9 @@ router.post(
       }
 
       //return json web token
-      //jadi data yg dibuka token didecode di midle ware ,
+      //dibawah ini payload di encrypt yg mrupakan data user yg lgin
+      //utk dibuatkan token ,dan nanti datanya di buka kalau mau access route private
+      //didiecode dari midlreware/auth jika user tadai acess route yg prive
       //nanti adalah id,name dari user
       const payload = {
         user: {
@@ -77,13 +81,13 @@ router.post(
         },
       };
       //res.send('Users registered');
-      //jadi setlah login dimasukin payload data utk si user 
+      //jadi setlah login dimasukin payload data utk si user
       //maka di compres dibuat token baru dikirm balik ke local storagenya user
       //note:asyncronus lhat note dibwah
       jwt.sign(
         payload,
         config.get('jwtSecret'),
-        { expiresIn: 360000 },
+        { expiresIn: '3 days' },
         (err, token) => {
           if (err) {
             throw err;
