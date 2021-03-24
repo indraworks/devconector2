@@ -1,13 +1,11 @@
 import React from 'react';
-import { Link,Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
-
-const Landing = ({auth:{isAuthenticated}}) => {
-
-  if(isAuthenticated) {
-    return <Redirect to='/dashboard'/>
+const Landing = ({ isAuthenticated }) => {
+  if (isAuthenticated) {
+    return <Redirect to='/dashboard' />;
   }
   return (
     <section className='landing'>
@@ -31,10 +29,10 @@ const Landing = ({auth:{isAuthenticated}}) => {
     </section>
   );
 };
- Landing.propTypes = {
-   auth:PropTypes.object,
-}
-const mapStateToProps= state => {
-  return ({auth:state.auth})
-}
+Landing.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
+};
+const mapStateToProps = (state) => {
+  return { isAuthenticated: state.auth.isAuthenticated };
+};
 export default connect(mapStateToProps)(Landing);

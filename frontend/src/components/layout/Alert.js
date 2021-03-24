@@ -2,19 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-const Alert = ({ alerts }) => {
+const Alert = ({ alerts }) =>
   //harus return ya karena dirender di app.js
+  alerts !== null &&
+  alerts.length > 0 &&
+  alerts.map((alert) => (
+    <div key={alert.id} className={`alert alert-${alert.alertType}`}>
+      {alert.msg}
+    </div>
+  ));
 
-  return (
-    alerts !== null &&
-    alerts.length > 0 &&
-    alerts.map((alert) => (
-      <div key={alert.id} className={`alert alert-${alert.alertType}`}>
-        {alert.msg}
-      </div>
-    ))
-  );
-};
 //kalau pakae vraibel.map(x=>(<div>{x}</div>)) //ini udah return
 //kalau pakai kata return variable.map(x=>{return <div>{x} </div>})
 const mapStateToProps = (state) => ({

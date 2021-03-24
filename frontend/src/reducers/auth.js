@@ -1,13 +1,12 @@
 //auth reducer berisi autentikasi untuk registrasi dan login
 import {
-  FAIL_REGISTER,
-  SUCCESS_REGISTER,
+  REGISTER_FAIL,
+  REGISTER_SUCCESS,
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_ERROR,
   LOGOUT,
-  CLEAR_PROFILE,
 } from '../actions/type';
 
 const initialState = {
@@ -26,7 +25,7 @@ export default function auth(state = initialState, action) {
         loading: false,
         user: action.payload,
       };
-    case SUCCESS_REGISTER:
+    case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
       localStorage.setItem('token', action.payload.token);
       return {
@@ -35,10 +34,9 @@ export default function auth(state = initialState, action) {
         isAuthenticated: true,
         loading: false,
       };
-    case FAIL_REGISTER:
+    case REGISTER_FAIL:
     case AUTH_ERROR:
     case LOGIN_ERROR:
-    case CLEAR_PROFILE:
     case LOGOUT: //logout sama token nul isauth false,
       localStorage.removeItem('token');
       return {

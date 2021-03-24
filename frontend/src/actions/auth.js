@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {
-  SUCCESS_REGISTER,
-  FAIL_REGISTER,
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
@@ -53,7 +53,7 @@ export const register = ({ name, email, password }) => async (dispatch) => {
     const res = await axios.post('/api/users', body, config);
 
     dispatch({
-      type: SUCCESS_REGISTER,
+      type: REGISTER_SUCCESS,
       payload: res.data,
     });
     dispatch(loadUser());
@@ -64,7 +64,7 @@ export const register = ({ name, email, password }) => async (dispatch) => {
       errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     }
     dispatch({
-      type: FAIL_REGISTER,
+      type: REGISTER_FAIL,
     });
   }
 };
@@ -89,7 +89,7 @@ export const login = ({ email, password }) => async (dispatch) => {
 
   try {
     const res = await axios.post('/api/auth', body, config);
-    console.log(res);
+    // console.log(res);
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data, //res.data isinya adalah token

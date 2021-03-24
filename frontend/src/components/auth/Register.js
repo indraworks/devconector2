@@ -25,12 +25,12 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
-      console.log('wrong password');
+     
       setAlert('wrong password', 'danger'); // di action ada 2 msg,type
       //yg typenya ini utk dipasang di css (className="alert-danger")
       //agar ada tampilnanwarna merah furher bisa di lihaat di css
     } else {
-      console.log('ok we goto send to server the data');
+      // console.log('ok we goto send to server the data');
       register({ name, email, password });
     }
   };

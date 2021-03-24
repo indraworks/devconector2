@@ -13,12 +13,12 @@ nah bisa ditulis pada gerbang function component
 */
 const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   //kalau irternari dihtml selalu variable pake tanda kurung
-  // guest link
+ 
   const authLinks = (
     <ul>
       <li>
         <Link to='/dashboard'>
-          <i className='fas fa-user'></i>
+          <i className='fas fa-user' />
           <span className='hide-sm'>Dashboard </span>
         </Link>
       </li>

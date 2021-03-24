@@ -18,17 +18,15 @@ router.get('/me', auth, async (req, res) => {
     const profile = await Profile.findOne({
       user: req.user.id,
     }).populate('user', ['name', 'avatar']);
-
+     //user : yg sblah kiri itu yg ada di models Uer Object I dreferences
+     //artinya cari user ~req.user.id atau id user tsb dari info yg diketik oleh client
     if (!profile) {
       return res.status(400).json({ msg: 'there is no profle for this user!' });
     }
     res.json(profile);
   } catch (err) {
-    console.log(err.message);
-    if (err.kond == 'ObjectId') {
-      return res.status(400).send('profile not found!');
-    }
-    res.status(500).send('error server');
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
 });
 
@@ -407,7 +405,7 @@ catatan utk ambil github user:
 
 /*
  CATATAN :
-ote bedalan ya nama module adalah User,
+ote bedakan ya nama module adalah User,
 kalau nama schema adalah user!!!
 dan pperlu diingat kelau kit abuat async req.res
 mamak di bagian try } catch {} ===>dibagian kalang try harus ada await!

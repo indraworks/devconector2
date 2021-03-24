@@ -52,13 +52,12 @@ router.post(
 
     try {
       let user = await User.findOne({ email });
-      console.log(' hello this is user ', user);
+      // console.log(' hello this is user ', user);
       if (!user) {
         //jika email gak ada
         return res.status(400).json({
           error: [{ msg: 'Invalid Credential !' }],
         });
-        console.log('hello ada error ', user);
       }
 
       //compare password input vs pasword db
@@ -77,7 +76,7 @@ router.post(
       const payload = {
         user: {
           id: user.id,
-          name: user.name, //krn pakai mongoose bisa gkperlu _id
+          //krn pakai mongoose bisa gkperlu _id
         },
       };
       //res.send('Users registered');
@@ -87,7 +86,7 @@ router.post(
       jwt.sign(
         payload,
         config.get('jwtSecret'),
-        { expiresIn: '3 days' },
+        { expiresIn: 360000 },
         (err, token) => {
           if (err) {
             throw err;
@@ -100,7 +99,7 @@ router.post(
     } catch (err) {
       console.log(err.message);
       //server Error
-      res.status(500).send('server Error "users');
+      res.status(500).send('server Error');
     }
   }
 );

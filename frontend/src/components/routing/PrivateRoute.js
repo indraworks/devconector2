@@ -21,13 +21,13 @@ export const PrivateRoute = ({
 }) => (
   <Route
     {...rest}
-    render={(props) =>
-      !isAuthenticated && loading === false ? (
+    render={props=>
+      !isAuthenticated  && !loading? (
         <Redirect to='/login' />
-      ) : (
-        <Component {...props} />
-      )
-    }
+      ) : ( <Component {...props} />
+         
+      )}
+    
   />
 );
 
