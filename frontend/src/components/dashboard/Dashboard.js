@@ -2,6 +2,7 @@ import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getCurrProfile } from '../../actions/profile';
+import DashboardAction from './DashboardAction';
 
 import Spinner from '../layout/Spinner';
 import { Link } from 'react-router-dom';
@@ -22,7 +23,9 @@ const Dashboard = ({
       <h1 className='large text-primary'>Dashboard</h1>
       <p className='lead'>Welcome {user && user.name}</p>
       {profile !== null ? (
-        <Fragment>heloo</Fragment>
+        <Fragment>
+          <DashboardAction />
+        </Fragment>
       ) : (
         <Fragment>
           <p>you have not yet setup a profile, please add some info </p>

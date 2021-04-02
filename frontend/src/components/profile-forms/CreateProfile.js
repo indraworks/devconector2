@@ -1,8 +1,10 @@
 import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { createProfile } from '../../actions/profile';
+import { Link, withRouter } from 'react-router-dom';
 
-const CreateProfile = (props) => {
+const CreateProfile = ({ createProfile, history }) => {
   const [formData, setFormData] = useState({
     company: '',
     website: '',
@@ -30,12 +32,18 @@ const CreateProfile = (props) => {
     linkedin,
     youtube,
     instagram,
-  } = formData;
+  } = formData; //sluruh isi formData state yg udah brubah dimasukan ke createProfile action +history
 
   //mbuat statae pilihan utk social network yg diimputkan dan saling oposite togle
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  
+    const onSubmit = (e) => {
+    e.preventDefault();
+    createProfile(formData, history); //menuju action createProfile
+  };
+
   return (
     <Fragment>
       <h1 className='large text-primary'>Create Your Profile</h1>
@@ -44,9 +52,9 @@ const CreateProfile = (props) => {
         profile stand out
       </p>
       <small>* = required field</small>
-      <form className='form'>
+      <form className='form' onSubmit={(e) => onSubmit(e)}>
         <div className='form-group'>
-          <select name='status'>
+          <select name='status' value={status} onChange={(e) => onChange(e)}>
             <option value='0'>* Select Professional Status</option>
             <option value='Developer'>Developer</option>
             <option value='Junior Developer'>Junior Developer</option>
@@ -62,7 +70,13 @@ const CreateProfile = (props) => {
           </small>
         </div>
         <div className='form-group'>
-          <input type='text' placeholder='Company' name='company' />
+          <input
+            type='text'
+            placeholder='Company'
+            name='company'
+            value={company}
+            onChange={(e) => onChange(e)}
+          />
           <small className='form-text'>
             Could be your own company or one you work for
           </small>
@@ -197,29 +211,34 @@ const CreateProfile = (props) => {
         )}
 
         <input type='submit' className='btn btn-primary my-1' />
-        <a className='btn btn-light my-1' href='dashboard.html'>
+        <Link className='btn btn-light my-1' to='/dashboard'>
           Go Back
-        </a>
+        </Link>
       </form>
     </Fragment>
   );
 };
 
 CreateProfile.propTypes = {
-  props: PropTypes,
+  createProfile: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({});
-
-const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateProfile);
+export default connect(null, { createProfile })(withRouter(CreateProfile));
 
 /*
 keterangan dipslaySoicalInput berupa toggle !not displaySocialInput nilai awal false
 jadi jika true maka tampilkan 
-  {displaySocialInput && <Fragment> </Fragment>} jika true di klik maka muncul
+kitabuat statenya 
+const[displaySocialInput,toggleSocialInput] = useState(false); 
 
+{displaySocialInput && <Fragment> { semua compoennt} </Fragment>} jika true di klik maka muncul
+ jadi && artinya jika displaySocialInputValue = true maka smua compoent dlm kalang fragment
+ ditampilkan.
+
+*/
+
+/*
+with Router digunakan agar bisa push history!
 
 
 */

@@ -1,0 +1,22 @@
+//tentang Edit Profile
+
+copy createProfile jadi EditProfile
+masukan Action: getCurrentProfile,Createprofile
+State:
+      profile:{profile,loading}
+  
+  
+  utk dapat state dari useEffect function 
+   dimana isinya adalah 
+   useEffect(()=> {
+    getCurrentprofile();
+    setFormData({
+    //semua form diiisi disni dia ada loading atau dia ada terbentuk atau 
+    //ada yg isis
+    contoh:
+     company:loading|| !profile.company? '' :profile.company.
+     //jadi ini contoh diatas componentnya apakah component value ada isinya?
+     //jika ada maka tampilkan jika tidak maka kosong.
+   }
+  
+  
