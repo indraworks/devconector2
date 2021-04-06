@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getCurrProfile } from '../../actions/profile';
 import DashboardAction from './DashboardAction';
+import Experience from '../dashboard/Experience';
+import Education from '../dashboard/Education';
 
 import Spinner from '../layout/Spinner';
 import { Link } from 'react-router-dom';
@@ -25,6 +27,8 @@ const Dashboard = ({
       {profile !== null ? (
         <Fragment>
           <DashboardAction />
+          <Experience experience={profile.experience} />
+          <Education education={profile.education} />
         </Fragment>
       ) : (
         <Fragment>

@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { setAlert } from './alert';
-import { GET_PROFILE, PROFILE_ERROR } from './type';
+import {
+  GET_PROFILE,
+  PROFILE_ERROR,
+  UPDATE_PROFILE,
+  CLEAR_PROFILE,
+  ACCOUNT_DELETED,
+} from './type';
 
 export const getCurrProfile = () => async (dispatch) => {
   //  } //kalau get gak perlu pakai headers
@@ -46,11 +52,139 @@ export const createProfile = (formData, history, edit = false) => async (
     }
   } catch (err) {
     const errors = err.response.data.errors;
-    errors.forEach((error) => dispatch(setAlert(err.msg, 'danger')));
+    errors.forEach((error) => dispatch(setAlert(error.msg, 'danger'))); //ini variable error dlm kalang
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+      //ini err adalah yg dari catch
+    });
+  }
+};
+
+//edit profile
+export const addExperience = (formData, history, edit = true) => async (
+  dispatch
+) => {
+  try {
+    //config idpakai pada saat kita send (POST/PUT)
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const res = await axios.put('/api/profile/experience', formData, config);
+    dispatch({
+      type: UPDATE_PROFILE,
+      payload: res.data,
+    });
+    //mmebritahu pada client alert bahwa profile dicreate /edit
+    dispatch(setAlert('Experience Added', 'success'));
+    if (!edit) {
+      //jika dia tidak diedit atau dicareated
+      //maka dipush ke datsboard page
+      history.push('/dashboard'); //redirect hanya bisa di pakai di
+    }
+  } catch (err) {
+    const errors = err.response.data.errors;
+    errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
     dispatch({
       type: PROFILE_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
     });
+  }
+};
+//AddEducation , ini 22 nya sama identik hasilnya juga kluarkan action UPDATE_PROFILE
+export const addEducation = (formData, history, edit = true) => async (
+  dispatch
+) => {
+  try {
+    //config idpakai pada saat kita send (POST/PUT)
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const res = await axios.put('/api/profile/education', formData, config);
+    dispatch({
+      type: UPDATE_PROFILE,
+      payload: res.data,
+    });
+    //mmebritahu pada client alert bahwa profile dicreate /edit
+    dispatch(setAlert('Education Added', 'success'));
+    if (!edit) {
+      //jika dia tidak diedit atau dicareated
+      //maka dipush ke datsboard page
+      history.push('/dashboard'); //redirect hanya bisa di pakai di
+    }
+  } catch (err) {
+    const errors = err.response.data.errors;
+    errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+//delete experience cari 'id experience trus delete liat di route apinya di bacakend
+
+export const deleteExperience = (id) => async (dispatch) => {
+  //kalau delete gak perlu pakai config/header/authorization sama dgn get satu arrah
+
+  try {
+    const res = axios.delete(`/api/profile/experience/${id}`);
+    dispatch({
+      type: UPDATE_PROFILE, //ttp sama UPDATE_PROFILE
+      payload: res.data,
+    });
+    dispatch(setAlert('successful delete experience', 'success'));
+  } catch (err) {
+    const errors = err.response.data.errors;
+    errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+//delete education
+export const deleteEducation = (id) => async (dispatch) => {
+  try {
+    const res = axios.delete(`/api/profile/education/${id}`);
+    dispatch({
+      type: UPDATE_PROFILE,
+      payload: res.data,
+    });
+    dispatch(setAlert('successful delete education', 'success'));
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+//account deleted
+
+export const deleteAccont = () => async (dispatch) => {
+  if (window.confirm('Are you sure? this Can NOT be undone!')) {
+    try {
+      const res = axios.delete('/api/profile');
+      dispatch({
+        type: ACCOUNT_DELETED, //account delete tidak ada di prfile ada di auth_reducers
+      });
+      dispatch({
+        type: CLEAR_PROFILE,
+      });
+    } catch (err) {
+      dispatch({
+        type: PROFILE_ERROR,
+        payload: { msg: err.response.statusText, status: err.response.status },
+      });
+    }
   }
 };
 
