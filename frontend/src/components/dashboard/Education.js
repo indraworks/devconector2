@@ -1,9 +1,10 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
+import { deleteEducation } from '../../actions/profile';
 
-export const Education = ({ education }) => {
+export const Education = ({ deleteEducation, education }) => {
   const educations = education.map((edu) => (
     <tr key={edu._id}>
       <td>{edu.school}</td>
@@ -18,7 +19,12 @@ export const Education = ({ education }) => {
       </td>
 
       <td>
-        <button className='btn btn-danger'>Delete</button>
+        <button
+          onClick={() => deleteEducation(edu._id)}
+          className='btn btn-danger'
+        >
+          Delete
+        </button>
       </td>
     </tr>
   ));
@@ -46,7 +52,7 @@ Education.propTypes = {
 
 // const mapStateToProps = (state) => ({});
 
-export default Education;
+export default connect(null, { deleteEducation })(Education);
 
 /*
 jadi gini props yg masuk yaitu dari parent :Dashboard  brupa experience berasal

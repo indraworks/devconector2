@@ -1,1 +1,0 @@
-(window.odspNextWebpackJsonp=window.odspNextWebpackJsonp||[]).push([["382"],{"3913":function(e,t,n){"use strict";n.r(t);n.d(t,"resourceKey",function(){return o});var r=n(18),i=n(1676),s=n(3415),o=Object(r.s)("FileHandlerDataSource",s.e,{dataRequestor:i.e})}}]);

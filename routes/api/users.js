@@ -75,7 +75,7 @@ router.post(
         },
       };
       //res.send('Users registered');
-     
+
       //note:asyncronus lhat note dibwah
       jwt.sign(
         payload,

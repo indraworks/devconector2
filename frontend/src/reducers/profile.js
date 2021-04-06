@@ -3,12 +3,14 @@ import {
   PROFILE_ERROR,
   CLEAR_PROFILE,
   UPDATE_PROFILE,
+  GET_PROFILES,
+  GET_GITREPOS,
 } from '../actions/type';
 
 const initialState = {
   profile: null,
   profiles: [], //utnuk tampung profile smua user login
-  repos: [],
+  repos: [], //aray utk gihub reposnya
   loading: true,
   error: {},
 };
@@ -21,6 +23,12 @@ const profileReducers = (state = initialState, action) => {
       return {
         ...state,
         profile: payload,
+        loading: false,
+      };
+    case GET_PROFILES:
+      return {
+        ...state,
+        profiles: payload,
         loading: false,
       };
     case PROFILE_ERROR:
@@ -36,6 +44,13 @@ const profileReducers = (state = initialState, action) => {
         repos: [],
         loading: false,
       };
+    case GET_GITREPOS:
+      return {
+        ...state,
+        repos: payload,
+        loading: false,
+      };
+
     default:
       return state;
   }

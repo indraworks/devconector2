@@ -6,6 +6,8 @@ import {
   UPDATE_PROFILE,
   CLEAR_PROFILE,
   ACCOUNT_DELETED,
+  GET_PROFILES,
+  GET_GITREPOS,
 } from './type';
 
 export const getCurrProfile = () => async (dispatch) => {
@@ -15,6 +17,66 @@ export const getCurrProfile = () => async (dispatch) => {
 
     dispatch({
       type: GET_PROFILE,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+//kita akan mendisplaykan semua profile
+//untuk itu kita get semua profilenya dulu
+export const getProfiles = () => async (dispatch) => {
+  //sebelumnya dispatch dulu clear profiles sblum ambil semua
+  dispatch({
+    type: CLEAR_PROFILE,
+  });
+  try {
+    const res = await axios.get('/api/profile');
+    dispatch({
+      type: GET_PROFILES,
+      payload: res.data,
+    });
+  } catch (err) {
+    const errors = err.response.data.errors;
+    errors.forEach((error) => dispatch(setAlert(error.msg, 'danger'))); //ini variable error dlm kalang
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+      //ini err adalah yg dari catch
+    });
+  }
+};
+
+//get profile byUserId bukan profileId nya
+export const getProfilesByUserId = (userId) => async (dispatch) => {
+  //sebelumnya dispatch dulu clear profiles sblum ambil semua
+  dispatch({
+    type: CLEAR_PROFILE,
+  });
+  try {
+    const res = await axios.get(`/api/profile/${userId}`);
+    dispatch({
+      type: GET_PROFILES,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+//github repository ambil berdasarkan namanya
+export const getGithubRepos = (username) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/api/profile/github/${username}`);
+    dispatch({
+      type: GET_GITREPOS,
       payload: res.data,
     });
   } catch (err) {
@@ -134,7 +196,7 @@ export const deleteExperience = (id) => async (dispatch) => {
   //kalau delete gak perlu pakai config/header/authorization sama dgn get satu arrah
 
   try {
-    const res = axios.delete(`/api/profile/experience/${id}`);
+    const res = await axios.delete(`/api/profile/experience/${id}`);
     dispatch({
       type: UPDATE_PROFILE, //ttp sama UPDATE_PROFILE
       payload: res.data,
@@ -153,7 +215,7 @@ export const deleteExperience = (id) => async (dispatch) => {
 //delete education
 export const deleteEducation = (id) => async (dispatch) => {
   try {
-    const res = axios.delete(`/api/profile/education/${id}`);
+    const res = await axios.delete(`/api/profile/education/${id}`);
     dispatch({
       type: UPDATE_PROFILE,
       payload: res.data,
@@ -169,10 +231,11 @@ export const deleteEducation = (id) => async (dispatch) => {
 
 //account deleted
 
-export const deleteAccont = () => async (dispatch) => {
+export const deleteAccount = () => async (dispatch) => {
+  //setelah selsai buat delete action maka kita buat import ke component actionya
   if (window.confirm('Are you sure? this Can NOT be undone!')) {
     try {
-      const res = axios.delete('/api/profile');
+      await axios.delete('/api/profile');
       dispatch({
         type: ACCOUNT_DELETED, //account delete tidak ada di prfile ada di auth_reducers
       });
@@ -202,6 +265,15 @@ utk jika berhasil create ---> maka di action GET_PROFILE
 
 urk pada saat error maka didispatch action PROFILE ERROR
 tak lupa send alert apa isi error tersebut 
+
+
+*/
+
+/*
+ukt memdisplay semua profile kita ambil:
+ getPorfiles smua profile
+ gihubs dari profile2
+
 
 
 */

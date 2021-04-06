@@ -18,8 +18,8 @@ router.get('/me', auth, async (req, res) => {
     const profile = await Profile.findOne({
       user: req.user.id,
     }).populate('user', ['name', 'avatar']);
-     //user : yg sblah kiri itu yg ada di models Uer Object I dreferences
-     //artinya cari user ~req.user.id atau id user tsb dari info yg diketik oleh client
+    //user : yg sblah kiri itu yg ada di models Uer Object I dreferences
+    //artinya cari user ~req.user.id atau id user tsb dari info yg diketik oleh client
     if (!profile) {
       return res.status(400).json({ msg: 'there is no profle for this user!' });
     }
@@ -88,6 +88,8 @@ router.post(
     }
     if (skills) {
       profileFields.skills = skills.split(',').map((skill) => skill.trim());
+      console.log(profileFields.skills);
+
       // console.log(profileFields.skills);
       // res.send('hello'); //kalau mau uji pake res.send agar ada nilai balik dari postman
     }

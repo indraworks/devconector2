@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
-// import { connect } from 'react-redux';
-
-export const Experience = ({ experience }) => {
+import { connect } from 'react-redux';
+import { deleteExperience } from '../../actions/profile';
+export const Experience = ({ deleteExperience, experience }) => {
   const experiences = experience.map((exp) => (
     <tr key={exp._id}>
       <td>{exp.company}</td>
@@ -18,7 +18,12 @@ export const Experience = ({ experience }) => {
       </td>
 
       <td>
-        <button className='btn btn-danger'>Delete</button>
+        <button
+          className='btn btn-danger'
+          onClick={() => deleteExperience(exp._id)}
+        >
+          Delete
+        </button>
       </td>
     </tr>
   ));
@@ -42,11 +47,10 @@ export const Experience = ({ experience }) => {
 
 Experience.propTypes = {
   experience: PropTypes.array.isRequired,
+  deleteExperience: PropTypes.func.isRequired,
 };
 
-// const mapStateToProps = (state) => ({});
-
-export default Experience;
+export default connect(null, { deleteExperience })(Experience);
 
 /*
 jadi gini props yg masuk yaitu dari parent :Dashboard  brupa experience berasal

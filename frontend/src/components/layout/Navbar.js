@@ -13,9 +13,14 @@ nah bisa ditulis pada gerbang function component
 */
 const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   //kalau irternari dihtml selalu variable pake tanda kurung
- 
+
   const authLinks = (
     <ul>
+      <li>
+        <Link to='/profiles'>
+          <span>Developers </span>
+        </Link>
+      </li>
       <li>
         <Link to='/dashboard'>
           <i className='fas fa-user' />
@@ -35,8 +40,11 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const guestLinks = (
     <ul>
       <li>
-        <a href='#!'>Developers</a>
+        <Link to='/profiles'>
+          <span>Developers </span>
+        </Link>
       </li>
+
       <li>
         <Link to='/register'>Register</Link>
       </li>

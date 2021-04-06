@@ -1,7 +1,7 @@
 import React, { useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getCurrProfile } from '../../actions/profile';
+import { deleteAccount, getCurrProfile } from '../../actions/profile';
 import DashboardAction from './DashboardAction';
 import Experience from '../dashboard/Experience';
 import Education from '../dashboard/Education';
@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 
 const Dashboard = ({
   getCurrProfile,
+  deleteAccount,
   auth: { user },
   profile: { loading, profile },
 }) => {
@@ -29,6 +30,11 @@ const Dashboard = ({
           <DashboardAction />
           <Experience experience={profile.experience} />
           <Education education={profile.education} />
+          <div className='my-2'>
+            <button onClick={() => deleteAccount()} className='btn btn-danger'>
+              <i className='fas fa-user-minus'>Delete MyAccount</i>
+            </button>
+          </div>
         </Fragment>
       ) : (
         <Fragment>
@@ -46,6 +52,7 @@ Dashboard.propTypes = {
   getCurrProfile: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
+  deleteAccount: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -53,4 +60,6 @@ const mapStateToProps = (state) => ({
   profile: state.profileReducers,
 });
 
-export default connect(mapStateToProps, { getCurrProfile })(Dashboard);
+export default connect(mapStateToProps, { getCurrProfile, deleteAccount })(
+  Dashboard
+);
