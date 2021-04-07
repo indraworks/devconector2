@@ -36,31 +36,27 @@ export const getProfiles = () => async (dispatch) => {
   });
   try {
     const res = await axios.get('/api/profile');
+    console.log('res_data', res.data);
+
     dispatch({
       type: GET_PROFILES,
       payload: res.data,
     });
   } catch (err) {
-    const errors = err.response.data.errors;
-    errors.forEach((error) => dispatch(setAlert(error.msg, 'danger'))); //ini variable error dlm kalang
     dispatch({
       type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { msg: err.message },
       //ini err adalah yg dari catch
     });
   }
 };
 
 //get profile byUserId bukan profileId nya
-export const getProfilesByUserId = (userId) => async (dispatch) => {
-  //sebelumnya dispatch dulu clear profiles sblum ambil semua
-  dispatch({
-    type: CLEAR_PROFILE,
-  });
+export const getProfilesById = (userId) => async (dispatch) => {
   try {
-    const res = await axios.get(`/api/profile/${userId}`);
+    const res = await axios.get(`/api/profile/user/${userId}`);
     dispatch({
-      type: GET_PROFILES,
+      type: GET_PROFILE,
       payload: res.data,
     });
   } catch (err) {
@@ -237,10 +233,10 @@ export const deleteAccount = () => async (dispatch) => {
     try {
       await axios.delete('/api/profile');
       dispatch({
-        type: ACCOUNT_DELETED, //account delete tidak ada di prfile ada di auth_reducers
+        type: CLEAR_PROFILE,
       });
       dispatch({
-        type: CLEAR_PROFILE,
+        type: ACCOUNT_DELETED, //account delete tidak ada di prfile ada di auth_reducers
       });
     } catch (err) {
       dispatch({

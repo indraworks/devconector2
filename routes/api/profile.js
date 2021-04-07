@@ -30,6 +30,25 @@ router.get('/me', auth, async (req, res) => {
   }
 });
 
+//@route   GET api/profile
+//@desc    get all Profile
+//@access  Public
+// @route    GET api/profile
+// @desc     Get all profiles
+// @access   Public
+router.get('/', async (req, res) => {
+  try {
+    const profiles = await Profile.find({}).populate('user', [
+      'name',
+      'avatar',
+    ]);
+    res.json(profiles);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 //@route   POSTapi/profile
 //@desc   Create  and Update profile route
 //@access  Private
@@ -69,7 +88,7 @@ router.post(
     } = req.body;
     //kit abuat objectFields pada Profile
     const profileFields = {};
-    profileFields.user = req.user.id;
+    profileFields.user = await req.user.id;
     //jika ada req.body masing2 object dicheck apa ada nilai jika ya maka masukan ke objecfields
     if (company) {
       profileFields.company = company;
@@ -132,24 +151,24 @@ router.post(
 //@desc    get all Profile
 //@access  Public
 
-router.get('/', async (req, res) => {
-  try {
-    let profile = await Profile.find().populate('user', ['name', 'avatar']);
-    res.json(profile);
-  } catch (err) {
-    res.status(500).send('SErver Error');
-    console.log();
-  }
-});
+// router.get('/', async (req, res) => {
+//   try {
+//     let profile = await Profile.find().populate('user', ['name', 'avatar']);
+//     res.json(profile);
+//   } catch (err) {
+//     res.status(500).send('SErver Error');
+//     console.log();
+//   }
+// });
 
-//@route   GET api/profile/user"user_id
+//@route   GET api/profile/user/user_id
 //@desc    get all Profile
 //@access  Public
 
-router.get('/user/:user_id', async (req, res) => {
+router.get('/user/:userId', async (req, res) => {
   try {
     let profile = await Profile.findOne({
-      user: req.params.user_id,
+      user: req.params.userId,
     }).populate('user', ['name', 'avatar']);
     res.json(profile);
   } catch (err) {

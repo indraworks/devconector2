@@ -60,8 +60,9 @@ const EditProfile = ({
       instagram: loading || !profile.instagram ? '' : profile.instagram,
     });
     // eslint-disable-next-line
-  }, [loading]); // jadi gini ini runing depend dari laoding sate berubah pas dia true
+  }, [loading, getCurrProfile]); // jadi gini ini runing depend dari laoding sate berubah pas dia true
   //artinya lagi default maka di run
+  //edit Prodile ini masih dlm getCurr Prodile kit amasukin juga slain loading
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });

@@ -16,7 +16,6 @@ router.get('/', auth, async (req, res) => {
     const user = await User.findById(req.user.id).select('-password');
     //dipakai findById dimana req.user adlaah isi dari user.id = req.user = { id: '5fec3264a1924573ce50e580' } nilai sbgai contoh
     res.json(user); //tampilkan smua user field except passwordnya
-    console.log(user);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -97,7 +96,7 @@ router.post(
         }
       );
     } catch (err) {
-      console.log(err.message);
+      // console.log(err.message);
       //server Error
       res.status(500).send('server Error');
     }
