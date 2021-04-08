@@ -83,8 +83,8 @@ router.post(
       youtube,
       twitter,
       facebook,
-      linkedin,
       instagram,
+      linkedin,
     } = req.body;
     //kit abuat objectFields pada Profile
     const profileFields = {};
@@ -106,8 +106,10 @@ router.post(
       profileFields.bio = bio;
     }
     if (skills) {
-      profileFields.skills = skills.split(',').map((skill) => skill.trim());
-      console.log(profileFields.skills);
+      profileFields.skills = skills
+        .split(',')
+        .map((skill) => ' ' + skill.trim());
+      // console.log(profileFields.skills);
 
       // console.log(profileFields.skills);
       // res.send('hello'); //kalau mau uji pake res.send agar ada nilai balik dari postman
@@ -128,10 +130,11 @@ router.post(
       let profile = await Profile.findOne({ user: req.user.id });
       //update
       if (profile) {
+        //update
         profile = await Profile.findOneAndUpdate(
           { user: req.user.id }, //mrupakan filter dari user yg relation ke profile,yg mana user id ini yg diupdate profilenya
           { $set: profileFields }, //set /udate smua
-          { new: true }
+          { new: true, upsert: true, setDefaultsOnInsert: true }
         );
         return res.json(profile);
       }
@@ -421,7 +424,6 @@ catatan utk ambil github user:
      )}&client_secret=${config.get('githubSecreet')}`,
 
 
-
 */
 
 /*
@@ -490,7 +492,6 @@ route.put(/experiecne ,()=>{})
 
  kalu ngisi caranya 
  Profile.expericene.unshift(newFieldArray)
-
 
 
 */
