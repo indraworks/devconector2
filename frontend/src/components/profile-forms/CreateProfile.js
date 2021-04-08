@@ -38,8 +38,8 @@ const CreateProfile = ({ createProfile, history }) => {
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  
-    const onSubmit = (e) => {
+
+  const onSubmit = (e) => {
     e.preventDefault();
     createProfile(formData, history); //menuju action createProfile
   };
@@ -125,11 +125,10 @@ const CreateProfile = ({ createProfile, history }) => {
             onChange={(e) => onChange(e)}
             value={githubusername}
           />
-          <small className='form-text'>
-            If you want your latest repos and a Github link, include your
-            username
-          </small>
         </div>
+        <small className='form-text'>
+          If you want your latest repos and a Github link, include your username
+        </small>
         <div className='form-group'>
           <textarea
             placeholder='A short bio of yourself'
