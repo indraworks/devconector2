@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-import { GET_POSTS, POST_ERROR } from '../actions/type';
+import { setAlert } from './alert';
+import { GET_POSTS, POST_ERROR, UPDATE_LIKES } from '../actions/type';
 
 export const getPosts = () => async (dispatch) => {
   try {
@@ -12,7 +12,18 @@ export const getPosts = () => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: POST_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status },
+      payload: { err: err.msg },
     });
   }
+};
+
+//addLike
+export const addLike = (id) => async (dispatch) => {
+  try {
+    const res = await axios.put(`/api/posts/like/${id}`);
+    dispatch({
+      type: UPDATE_LIKES,
+      payload: { id, likes: res.data },
+    });
+  } catch (err) {}
 };

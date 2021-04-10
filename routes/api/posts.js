@@ -150,6 +150,16 @@ router.put('/like/:id', auth, async (req, res) => {
     });
   }
 });
+/*
+adi gini cerita tentang like atau unlike ,ktika ada user masuk logiin misalkan si a login 
+nah dia like postingnyanya si b maka yg terjadi adalah:
+bgini dari awal yaitu smua yg di getpost postnay itu smua mucnul di menu post 
+nah pas kita tekan like kita menuju pada id yg ada dari post tsb 
+nah maka diarahkan ke route ini ,diroute ini 
+
+
+
+*/
 
 //ini post unlike
 //@route   api/posts/unlike/:id
