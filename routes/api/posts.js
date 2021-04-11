@@ -47,6 +47,66 @@ router.post(
     }
   }
 );
+
+/*
+catatan pengisian waktu ngisi posts kan datase model post kan ada like ada coment 
+yg mana comenct trdiri atas object user( relasinya ) dan object_id dari user yg isi coment ,text ( isi 
+  commentnya),name,avatar,date 
+jadi gini ya ini kalau noSQL beda sama dgn SQL server/postgress kalau ngisi posts maka smua field mesti diisi
+kalau di table relasi biasa ini kan jadi banyak skali yg kosong fieldnya akan tetapi utk nSQL ini 
+adalah document saja gak masalah jadi waktu ngisi posts atau new post yg disii hanya 
+user_id(objid releasi),avatar,etxt(post) ,name(nama user yg ngisi post/owner post),avatar(avartar user)
+
+jadi yg like masih kosong ,like diisi userId yg ngelike post tsb
+isi model post di db:
+ user: {
+    type: Schema.Types.ObjectId,
+  },
+  text: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+  },
+  avatar: {
+    type: String,
+  },
+ likes: [
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+      },
+    },
+  ],
+  comments: [
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+      },
+      text: {
+        type: String,
+        required: true,
+      },
+      name: {
+        type: String,
+      },
+      avatar: {
+        type: String,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+ TERLIHAT DIATAS BAHWA 
+*/
+
 //@route   GET api/posts
 //@desc    Test route
 //@access  private buth auth middleware
@@ -125,6 +185,8 @@ router.delete('/:id', auth, async (req, res) => {
 //akan bertambah lagi
 
 router.put('/like/:id', auth, async (req, res) => {
+  //ini :id adalah id dari postId -nya
+  //yg dilike oleh si user_id
   try {
     const post = await Post.findById(req.params.id);
     if (!post) {
@@ -133,15 +195,36 @@ router.put('/like/:id', auth, async (req, res) => {
       });
     }
     if (
+      //jika ktmu filter ariable like apa ada user yg lebih dari 1x like
       post.likes.filter((like) => like.user.toString() === req.user.id).length >
       0
     ) {
       return res.status(400).json({
-        msg: 'user already like this post',
+        msg: 'user already like this post', //jika sudah pernah gak bisa like
       });
     }
-    post.likes.unshift({ user: req.user.id });
-    await post.save();
+    //didalam likes ada :likes:[{ user}] //dimana user typedatanya adalah relasi dari objid table user
+    /*
+    likes: [
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+      },
+    },
+    */
+    post.likes.unshift({ user: req.user.id }); //jika belum maka likes diisi dgn user_id yg like
+    //unshift adalah menambah/mengisi paling depan /insert
+    await post.save(); //kmudian post diupdate databasnya
+    //nah pada saat acation dgn reducer ini kan dijalankan route ini
+    //dan dikerjakan isinya route ini karena melayani action reducer dalam hal ini adalah
+    // UPDATE_LIKES
+    //nah yg dikembalikan oleh UPDATE_LIKES payloadnya adalag
+    //res.json(post.likes) yg mana sama dgn isinya res.data
+    //dari axios.put(/api/post/likes/${post_id}) 
+    //isinya adalah nilai req.user.id  ==>user id yg lagi login
+    // diaction payload: { post_id, likes: res.data },
+    //diterima direducer update state { ...state,likes:payload.likes} //payload.likes artinya = res.data yaitu req.user.id
+    //yg artinya userid yg saat itu sedang login 
     res.json(post.likes);
   } catch (err) {
     console.log(err.message);
@@ -197,7 +280,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
   }
 });
 
-// ///////COMENT //////
+// ///////////////////////COMENT ///////////////////////////////////////////////////
 // //@route   POST api/posts/comments/:id
 // //@desc    Test route
 // //@access  private buth auth middleware
@@ -214,14 +297,14 @@ router.post(
     }
     try {
       //req.user.id dari auth didicode di middleware
-      const user = await User.findById(req.user.id);
+      const user = await User.findById(req.user.id); //user yg kasih comment
       const post = await Post.findById(req.params.id); //cari id post di dtabase
 
       const newComment = {
         text: req.body.text, //from input form
         name: user.name, //dari dattabase
         avatar: user.avatar, //dari database
-        id: req.user.id, //from inputform ==> auth wihc decoded by jwt
+        id: req.user.id, //from inputform ==> auth wihc decoded by jwt dari user yginputin data
       };
       //masukan ke dalam comment fields yg berupa aray krn id post  sudah ktmu diatas
       //dari req.params.id
