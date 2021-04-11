@@ -1,4 +1,9 @@
-import { GET_POSTS, POST_ERROR } from '../actions/type';
+import {
+  DELETE_POST,
+  GET_POSTS,
+  POST_ERROR,
+  UPDATE_LIKES,
+} from '../actions/type';
 
 const initialState = {
   posts: [],
@@ -16,6 +21,20 @@ export default function getPosts(state = initialState, action) {
         posts: payload,
         loading: false,
       };
+    case UPDATE_LIKES:
+      return {
+        ...state,
+        posts: state.posts.map((post) =>
+          post._id === payload._id ? { ...state, likes: payload.likes } : post
+        ),
+        loading: false,
+      };
+    case DELETE_POST:
+      return {
+        ...state, //gefilter bahwa id yg udah didelete tak perlu ditamplikan
+        posts: state.posts.filter((post) => post.id !== payload),
+        loading: false,
+      };
     case POST_ERROR:
       return {
         ...state,
@@ -30,5 +49,18 @@ export default function getPosts(state = initialState, action) {
 /*
 urutanya tetap sama yaitu mmbuat reducer dulu daftarkan di indexnya 
 setelahnya create actionya dan 
+
+*/
+/*
+keterangan utk UPDATE_LIKES ,jadi jika ada yg ngelikes maka akan dimasukan request.user.id 
+di array post.likes ( post adalah object isinya ada likes yg array utk stateya )
+nah tadai kan ngisi post_id di payload nah skrgn disini kita update stateya dulu trus cari itu apa ada idnya 
+jika kemu maka kita update statenya dan kita isi likes atau post.likes dgn payload.likes
+sbnarnya kan hanya payload kalalu ngisinya di post tapi yg diisi adalah likes yg under dari 
+psot atau object variablenya post maka harus diisi dgn payload.likes
+
+posts: state.posts.map(post=>post._id === payload._id?
+  ({...state,likes:payload.likes}):(post))
+
 
 */
