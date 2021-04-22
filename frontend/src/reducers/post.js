@@ -4,6 +4,9 @@ import {
   POST_ERROR,
   UPDATE_LIKES,
   ADD_POST,
+  GET_POST,
+  ADD_COMMENT,
+  DELETE_COMMENT,
 } from '../actions/type';
 
 const initialState = {
@@ -16,10 +19,16 @@ const initialState = {
 export default function getPosts(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
-    case GET_POSTS:
+    case GET_POSTS: //plural
       return {
         ...state,
         posts: payload,
+        loading: false,
+      };
+    case GET_POST:
+      return {
+        ...state,
+        post: payload,
         loading: false,
       };
     case ADD_POST:
@@ -51,6 +60,24 @@ export default function getPosts(state = initialState, action) {
         error: payload,
         loading: false,
       };
+    case ADD_COMMENT:
+      return {
+        ...state,
+        post: { ...state.post, comments: payload },
+        loading: false,
+      };
+    case DELETE_COMMENT:
+      return {
+        ...state,
+        post: {...state.post,comments:state.post.comments.filter(
+          (comment) => comment._id !== payload
+        )}
+        
+        ,
+        loading:false
+      };
+    //payoad sudah berisi comment_id yg didelete
+
     default:
       return state;
   }
@@ -71,6 +98,59 @@ psot atau object variablenya post maka harus diisi dgn payload.likes
 
 posts: state.posts.map(post=>post._id === payload._id?
   ({...state,likes:payload.likes}):(post))
+
+
+*/
+
+/*
+isi add coment di backend
+try {
+      //req.user.id dari auth didicode di middleware
+      const user = await User.findById(req.user.id); //user yg kasih comment
+      const post = await Post.findById(req.params.id); //cari id post di dtabase
+
+      const newComment = {
+        text: req.body.text, //from input form
+        name: user.name, //dari dattabase
+        avatar: user.avatar, //dari database
+        id: req.user.id, //from inputform ==> auth wihc decoded by jwt dari user yginputin data
+      };
+
+
+
+
+      //masukan ke dalam comment fields yg berupa aray krn id post  sudah ktmu diatas
+      //dari req.params.id
+      //link bacaan :https://alligator.io/js/push-pop-shift-unshift-array-methods/
+      post.comments.unshift(newComment); //masukan di fields commenst(yg brerupa aaarray) di table post
+      //unshift artinya tmbahkan di paling awal array (selalu)
+      //yg id post udah didapat dari atas findbyid(req.params.id)
+
+      await post.save();
+      res.json(post.comments); // yg dikirim balik adalah comment ya ke client
+      post.comemtns jadi brupa aarray  object comments 
+      bisa dilihat di models:
+      comments: [
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+      },
+      text: {
+        type: String,
+        required: true,
+      },
+      name: {
+        type: String,
+      },
+      avatar: {
+        type: String,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
 
 
 */

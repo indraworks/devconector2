@@ -16,7 +16,11 @@ export const CREATE_PROFILE = 'CREATE_PROFILE';
 export const UPDATE_PROFILE = 'CREATE_PROFILE';
 export const ACCOUNT_DELETED = 'ACCOUNT_DELETED';
 export const GET_POSTS = 'GET_POSTS';
+export const GET_POST = 'GET_POST'; //singulars
+
 export const POST_ERROR = 'POST_ERROR';
 export const UPDATE_LIKES = 'UPDATE_LIKES';
 export const DELETE_POST = 'DELETE_POST';
 export const ADD_POST = 'ADD_POST';
+export const ADD_COMMENT = 'ADD_POST';
+export const DELETE_COMMENT = 'ADD_POST';

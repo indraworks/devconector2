@@ -1,0 +1,3 @@
+di components ada 2 folder posts utk piural ambil semua posts
+dan folder post utk ambil hanya 1 buah post berdsarkan pilihan yg akan comment 
+diclick menuju pada papge halaman yg akan di comment

@@ -31,7 +31,7 @@ export const ProfileScreen = ({
           </Link>
           {auth.isAuthenticated &&
             loading === false &&
-            auth.user.id === profile.user.id && (
+            auth.user._id === profile.user._id && (
               <Link to='/edit-profile' className='btn btn-dark'>
                 Edit Profile
               </Link>

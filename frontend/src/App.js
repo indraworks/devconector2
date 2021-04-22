@@ -12,6 +12,7 @@ import AddEducation from './components/profile-forms/AddEducation';
 import EditProfile from './components/profile-forms/EditProfile';
 import Profiles from './components/profiles/Profiles';
 import Posts from './components/posts/Posts';
+import Post from './components/post/Post';
 import ProfileScreen from './components/profile/ProfileScreen';
 import Dashboard from './components/dashboard/Dashboard';
 import PrivateRoute from './components/routing/PrivateRoute';
@@ -69,6 +70,7 @@ const App = () => {
                 path='/add-education'
                 component={AddEducation}
               />
+              <PrivateRoute exact path='/posts/:id' component={Post} />
               <PrivateRoute exact path='/posts' component={Posts} />
             </Switch>
           </section>
