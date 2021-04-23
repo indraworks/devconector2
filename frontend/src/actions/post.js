@@ -144,7 +144,7 @@ export const addComment = (post_id, formData) => async (dispatch) => {
 //note route utk delete comement di backend :router.delete('/comment/:id/:comment_id'
 export const deleteComment = (post_id, comment_id) => async (dispatch) => {
   try {
-    await axios.post(`/api/posts/comment/${post_id}`);
+    await axios.post(`/api/posts/comment/${post_id}/${comment_id}`);
     dispatch({
       type: DELETE_COMMENT,
       payload: comment_id, //no id comment yg didelete

@@ -69,12 +69,15 @@ export default function getPosts(state = initialState, action) {
     case DELETE_COMMENT:
       return {
         ...state,
-        post: {...state.post,comments:state.post.comments.filter(
-          (comment) => comment._id !== payload
-        )}
-        
-        ,
-        loading:false
+        post: {
+          ...state.post,
+          comments: state.post.comments.filter(
+            (comment) => comment._id !== payload
+            //kculai yg uda didelete statenya tidak usah ditmapilkan krn uda deleted di server
+          ),
+        },
+
+        loading: false,
       };
     //payoad sudah berisi comment_id yg didelete
 
